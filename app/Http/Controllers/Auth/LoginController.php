@@ -84,7 +84,7 @@ class LoginController extends Controller
     {
         $user = User::where(['email' => $request->input('email')])->first();
         if ($user && Hash::check($request->input('password'), $user->password) && 
-            $user->hasAnyRole(User::getNormalRoles())) {
+            $user->hasAnyRole(User::getCompanyRoles())) {
 
             Auth::login($user, $request->filled('remember'));
             return true;

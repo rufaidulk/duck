@@ -44,7 +44,7 @@ class User extends Authenticatable
     /**
      * @return array
      */
-    public static function getNormalRoles()
+    public static function getCompanyRoles()
     {
         return [
             self::ROLE_COMPANY
