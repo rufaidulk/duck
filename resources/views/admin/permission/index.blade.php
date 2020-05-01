@@ -28,10 +28,6 @@
                                 <td>{{ date('d M Y', strtotime($permission->created_at)) }}</td>
                                 <td>{{ date('d M Y', strtotime($permission->updated_at)) }}</td>
                                 <td style="display: inline-flex;">
-                                    <a href="{{ route('admin.permission.edit',$permission->id)}}" 
-                                        class="btn btn-success mr-1">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
                                     <form action="{{ route('admin.permission.destroy', $permission->id)}}" 
                                         method="post">
                                         {{ csrf_field() }}
