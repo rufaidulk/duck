@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
@@ -40,6 +40,16 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * Show the admin's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLoginForm()
+    {
+        return view('admin.login.login');
     }
 
     /**
@@ -84,7 +94,7 @@ class LoginController extends Controller
     {
         $user = User::where(['email' => $request->input('email')])->first();
         if ($user && Hash::check($request->input('password'), $user->password) && 
-            $user->hasAnyRole(User::getNormalRoles())) {
+            $user->hasRole(User::ROLE_ADMIN)) {
 
             Auth::login($user, $request->filled('remember'));
             return true;
@@ -92,4 +102,5 @@ class LoginController extends Controller
 
         return false;
     }
+
 }
