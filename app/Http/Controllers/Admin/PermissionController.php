@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Permission;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PermissionController extends Controller
 {
@@ -27,7 +25,7 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $permissions = Permission::orderBy('id','desc')->paginate(15);
+        $permissions = Permission::orderBy('name','asc')->paginate(15);
         
         return view('admin.permission.index', compact('permissions'));
     }

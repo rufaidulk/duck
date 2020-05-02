@@ -3,8 +3,7 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h5 class="float-left">Permissions</h5>
-        <a href="{{ route('admin.permission.create') }}" class="btn btn-primary float-right">Add</a>
+        <h5 class="float-left">Roles</h5>
     </div>
     <div class="card-body">
         <div class="row">
@@ -24,27 +23,27 @@
                         @php
                             $index = 1;
                         @endphp
-                        @foreach($permissions as $permission)
+                        @foreach($roles as $role)
                             <tr>
                                 <td>{{ $index++ }}</td>
-                                <td>{{ $permission->name }}</td>
-                                <td>{{ date('d M Y', strtotime($permission->created_at)) }}</td>
-                                <td>{{ date('d M Y', strtotime($permission->updated_at)) }}</td>
+                                <td>{{ ucfirst($role->name) }}</td>
+                                <td>{{ date('d M Y', strtotime($role->created_at)) }}</td>
+                                <td>{{ date('d M Y', strtotime($role->updated_at)) }}</td>
                                 <td style="display: inline-flex;">
-                                    <form action="{{ route('admin.permission.destroy', $permission->id)}}" 
-                                        method="post">
-                                        {{ csrf_field() }}
-                                        @method('DELETE')
-                                        <button class="btn btn-danger" type="submit">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </form>
+                                    <a href="{{ route('admin.role.show', $role->id) }} " 
+                                        class="btn btn-info mr-1">
+                                        <i class="fa fa-eye"></i>
+                                    </a>                                    
+                                    <a href="{{ route('admin.role.assign', $role->id) }} " 
+                                        class="btn btn-success">
+                                        <i class="fa fa-location-arrow"></i>
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
-                    {!! $permissions->links() !!}
+                    {!! $roles->links() !!}
                 </div>
             </div>
         </div>
