@@ -82,7 +82,10 @@ class LoginController extends Controller
      */
     private function attemptLogin(Request $request)
     {
-        $user = User::where(['email' => $request->input('email')])->first();
+        $user = User::where([
+            'email' => $request->email, 'status' => User::STATUS_ACTIVE
+        ])->first();
+        
         if ($user && Hash::check($request->input('password'), $user->password) && 
             $user->hasAnyRole(User::getCompanyRoles())) {
 

@@ -82,17 +82,6 @@
                                         <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
                                     </a>
                                 </form>
-                                <hr>
-                                <div class="text-center">
-                                    @if (Route::has('password.request'))
-                                        <a class="small" href="{{ route('password.request') }}">
-                                            {{ __('Forgot Password?') }}
-                                        </a>
-                                    @endif
-                                </div>
-                                <div class="text-center">
-                                    <a class="small" href="{{ route('register') }}">Create an Account!</a>
-                                </div>
                             </div>
                         </div>
                     </div>

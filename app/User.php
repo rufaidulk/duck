@@ -9,6 +9,8 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
+    const STATUS_PENDING = 1;
+    const STATUS_ACTIVE = 2;
     const ROLE_ADMIN = 'admin';
     const ROLE_COMPANY = 'company';
     
