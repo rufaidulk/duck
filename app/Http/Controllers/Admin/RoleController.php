@@ -60,6 +60,37 @@ class RoleController extends Controller
     }
 
     /**
+     * Show the form for revoking permission.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function revoke($id)
+    {
+        $role = Role::findOrFail($id);
+        $permissions = Permission::pluck('name', 'id');
+        $permissions = Permission::leftJoin('role_has_permissions as rhp', 
+                        'rhp.permission_id', '=' , 'permissions.id')
+                        ->where(['rhp.role_id' => $id])
+                        ->pluck('name', 'id');
+        return view('admin.role.revoke', compact('role', 'permissions'));
+    }
+
+    /**
+     * Revoke permission from role
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function revokePermission(Request $request, $id)
+    {
+        $role = Role::findOrFail($id);
+        $permission = Permission::findOrFail($request->permission);
+        $role->revokePermissionTo($permission);
+
+        return redirect()->route('admin.role.index')->with('success', 'Permission removed successfully!');
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  int  $id

@@ -35,8 +35,12 @@
                                         <i class="fa fa-eye"></i>
                                     </a>                                    
                                     <a href="{{ route('admin.role.assign', $role->id) }} " 
-                                        class="btn btn-success">
+                                        class="btn btn-success mr-1">
                                         <i class="fa fa-location-arrow"></i>
+                                    </a>                                    
+                                    <a href="{{ route('admin.role.revoke', $role->id) }} " 
+                                        class="btn btn-danger">
+                                        <i class="fa fa-undo"></i>
                                     </a>
                                 </td>
                             </tr>
