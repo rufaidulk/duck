@@ -2,11 +2,30 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Exception;
+use App\Company;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CompanyRequest;
+use App\User;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
+    private $user;
+    private $company;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(Company $company, User $user)
+    {
+        $this->middleware(['auth', 'adminAuthorization']);
+        $this->company = $company;
+        $this->user = $user;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +33,9 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+        $companies = Company::with('user')->orderBy('name', 'asc')->paginate(15);
+
+        return view('admin.company.index', compact('companies'));
     }
 
     /**
@@ -24,7 +45,9 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        //
+        $users = $this->user->getCompanyUsers()->pluck('email', 'id');
+        
+        return view('admin.company.create', compact('users'));
     }
 
     /**
@@ -33,9 +56,17 @@ class CompanyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CompanyRequest $request)
     {
-        //
+        try{       
+            $this->company->createModel($request->validated());
+        }
+        catch (Exception $e) {
+            logger($e);
+            return back()->with('error', 'Oops something went wrong!')->withInput();
+        }
+
+        return redirect()->route('admin.company.index')->with('success', 'Company created successfully!');
     }
 
     /**
@@ -57,7 +88,10 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
-        //
+        $company = Company::findOrFail($id);
+        $users = $this->user->getCompanyUsers()->pluck('email', 'id');
+
+        return view('admin.company.edit', compact('company', 'users'));
     }
 
     /**
@@ -67,9 +101,17 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CompanyRequest $request, $id)
     {
-        //
+        try{
+            $this->company->findOrFail($id)->updateModel($request->validated());
+        }
+        catch (Exception $e) {
+            logger($e);
+            return back()->with('error', 'Oops something went wrong!');
+        }
+
+        return redirect()->route('admin.company.index')->with('success', 'Company updated successfully!');
     }
 
     /**
@@ -80,6 +122,8 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->company->findOrFail($id)->delete();
+
+        return redirect()->route('admin.company.index')->with('success', 'Company deleted successfully!');
     }
 }

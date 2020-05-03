@@ -21,6 +21,7 @@ class CreateCompaniesTable extends Migration
             $table->tinyInteger('status');
             $table->dateTime('created_at', 0);
             $table->dateTime('updated_at', 0);
+            $table->softDeletes('deleted_at', 0);
         });
     }
 

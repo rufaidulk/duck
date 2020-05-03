@@ -52,4 +52,11 @@ class User extends Authenticatable
             self::ROLE_COMPANY
         ];
     }
+
+    public function getCompanyUsers()
+    {
+        return $this->whereHas('roles', function($query) {
+                $query->whereIn('name', self::getCompanyRoles());
+            })->get();
+    }
 }
