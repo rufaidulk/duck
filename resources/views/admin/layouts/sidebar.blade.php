@@ -43,6 +43,13 @@
         </div>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('admin.company.index') }}">
+            <i class="fas fa-fw fa-building"></i>
+            <span>Company</span>
+        </a>
+    </li>
+
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">

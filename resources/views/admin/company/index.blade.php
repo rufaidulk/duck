@@ -31,7 +31,7 @@
                                 <td>{{ $index++ }}</td>
                                 <td>{{ ucfirst($company->name) }}</td>
                                 <td>{{ ucfirst($company->user->email) }}</td>
-                                <td>{{ ucfirst($company->name) }}</td>
+                                <td>{{ ucfirst($company->description) }}</td>
                                 <td>{{ date('d M Y', strtotime($company->created_at)) }}</td>
                                 <td>{{ date('d M Y', strtotime($company->updated_at)) }}</td>
                                 <td style="display: inline-flex;">

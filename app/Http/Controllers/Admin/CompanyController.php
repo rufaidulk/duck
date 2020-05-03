@@ -22,6 +22,7 @@ class CompanyController extends Controller
     public function __construct(Company $company, User $user)
     {
         $this->middleware(['auth', 'adminAuthorization']);
+        $this->authorizeResource(Company::class, 'company');
         $this->company = $company;
         $this->user = $user;
     }
@@ -86,9 +87,8 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Company $company)
     {
-        $company = Company::findOrFail($id);
         $users = $this->user->getCompanyUsers()->pluck('email', 'id');
 
         return view('admin.company.edit', compact('company', 'users'));
@@ -101,10 +101,10 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CompanyRequest $request, $id)
+    public function update(CompanyRequest $request, Company $company)
     {
         try{
-            $this->company->findOrFail($id)->updateModel($request->validated());
+            $company->updateModel($request->validated());
         }
         catch (Exception $e) {
             logger($e);
@@ -120,9 +120,9 @@ class CompanyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Company $company)
     {
-        $this->company->findOrFail($id)->delete();
+        $company->delete();
 
         return redirect()->route('admin.company.index')->with('success', 'Company deleted successfully!');
     }

@@ -40,8 +40,6 @@ class Company extends Model
             $this->status = self::STATUS_ACTIVE;
 
             $this->save();
-
-            return $this;
         }
         catch (Exception $e) { 
             throw $e;
