@@ -12,7 +12,7 @@
 
     <title>{{ config('app.name', 'Duck') }}</title>
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}"></script>
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet" type="text/css">
@@ -21,6 +21,8 @@
 
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/multi-select.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css">
 </head>
 
 <body id="page-top">
@@ -40,7 +42,22 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Success!</strong> {{ session('success') }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
+                    @if (session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Warning!</strong> {{ session('error') }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
                     @yield('content')
 
                 </div>
@@ -75,7 +92,6 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <!-- <a class="btn btn-primary" href="login.html">Logout</a> -->
                     <a class="btn btn-primary" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                      document.getElementById('logout-form').submit();">
@@ -91,7 +107,11 @@
     </div>
 
     <!-- Custom scripts for all pages-->
-    <script type="text/javascript" src="{{ asset('js/sb-admin-2.min.js') }}" defer></script>
+    <script type="text/javascript" src="{{ asset('js/sb-admin-2.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.multi-select.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery.quicksearch.js') }}"></script>
+
+    @yield('page-script')
 
 </body>
 </html>
