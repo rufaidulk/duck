@@ -28,6 +28,26 @@
         Interface
     </div>
 
+    <!-- Nav Item - Tables -->
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('project.index') }}">
+            <i class="fas fa-fw fa-suitcase"></i>
+            <span>Projects</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="tables.html">
+            <i class="fas fa-fw fa-tasks"></i>
+            <span>Issues</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="tables.html">
+            <i class="fas fa-fw fa-clipboard-list"></i>
+            <span>Activities</span>
+        </a>
+    </li>
+
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">

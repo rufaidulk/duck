@@ -43,6 +43,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+    
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'id', 'user_id');
+    }
+
     /**
      * @return array
      */
