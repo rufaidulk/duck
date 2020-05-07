@@ -17,7 +17,7 @@ class CreateCompaniesTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->text('description');
-            $table->bigInteger('user_id')->unique();
+            $table->bigInteger('user_id')->unique()->comment('company admin');
             $table->tinyInteger('status');
             $table->dateTime('created_at', 0);
             $table->dateTime('updated_at', 0);

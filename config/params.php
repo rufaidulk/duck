@@ -10,5 +10,11 @@ return [
             5 => 'Completed',
             6 => 'Closed'
         ]
+    ],
+    'user' => [
+        'status' => [
+            1 => 'Pending',
+            2 => 'Active'
+        ]
     ]
 ];

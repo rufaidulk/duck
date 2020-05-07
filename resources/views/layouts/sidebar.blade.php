@@ -41,6 +41,16 @@
             <span>Issues</span>
         </a>
     </li>
+
+    @can('viewAny', App\User::class)
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('user.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Users</span>
+        </a>
+    </li>
+    @endcan
+    
     <li class="nav-item">
         <a class="nav-link" href="tables.html">
             <i class="fas fa-fw fa-clipboard-list"></i>

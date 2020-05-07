@@ -2,19 +2,24 @@
 
 namespace App;
 
+use Exception;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
+    use Notifiable, HasRoles;
+
     const STATUS_PENDING = 1;
     const STATUS_ACTIVE = 2;
     const ROLE_ADMIN = 'admin';
     const ROLE_COMPANY = 'company';
-    
-    use Notifiable, HasRoles;
+    const ROLE_MANAGER = 'manager';
+    const ROLE_DEVELOPER = 'developer';
+    const ROLE_TESTER = 'tester';
 
     /**
      * The attributes that are mass assignable.
@@ -54,13 +59,66 @@ class User extends Authenticatable
         return $this->belongsTo(Company::class, 'id', 'user_id');
     }
 
+    public function createModel($attributes)
+    {
+        try
+        {
+            $this->fill($attributes);
+            $this->company_id = $attributes['company_id'];
+            $this->password = Hash::make($attributes['password']);
+            $this->status = self::STATUS_ACTIVE;
+
+            $this->save();
+        }
+        catch (Exception $e) { 
+            throw $e;
+        }
+    }
+
+    public function updateModel($attributes)
+    {
+        try
+        {
+            $this->fill($attributes);
+            $this->company_id = $attributes['company_id'];
+            if (!empty($this->password)) {
+                $this->password = Hash::make($attributes['password']);
+            }
+            else {
+                $this->password = $this->getOriginal('password');
+            }
+
+            $this->status = self::STATUS_ACTIVE;
+
+            $this->save();
+        }
+        catch (Exception $e) { 
+            throw $e;
+        }
+    }
+
     /**
      * @return array
      */
     public static function getCompanyRoles()
     {
         return [
-            self::ROLE_COMPANY
+            self::ROLE_COMPANY,
+            self::ROLE_MANAGER,
+            self::ROLE_DEVELOPER,
+            self::ROLE_TESTER
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getCompanyUserRoles()
+    {
+        return [
+            self::ROLE_MANAGER,
+            self::ROLE_DEVELOPER,
+            self::ROLE_TESTER
         ];
     }
 
@@ -69,5 +127,13 @@ class User extends Authenticatable
         return $this->whereHas('roles', function($query) {
                 $query->whereIn('name', self::getCompanyRoles());
             })->get();
+    }
+
+    public function getUsersByCompanyId(int $id)
+    {
+        return $this->with('roles')
+                ->whereHas('roles', function($query) {
+                    $query->whereIn('name', self::getCompanyRoles());
+                });   
     }
 }
