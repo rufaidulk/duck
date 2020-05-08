@@ -42,7 +42,8 @@ class ProjectRequest extends FormRequest
             'status' => [
                 'required',
                 Rule::in(array_keys(config('params.project.status')))
-            ]
+            ],
+            'user_id' => 'required'
         ];
     }
 
@@ -51,14 +52,18 @@ class ProjectRequest extends FormRequest
      */
     private function updateRules()
     {
-        // return [
-        //     'name' => [
-        //         'required',
-        //         'string', 'max:255',
-        //         Rule::unique('companies')->ignore($this->route('company')),
-        //     ],
-        //     'description' => 'required|string|max:255',
-        //     'user_id' => 'required|exists:users,id'
-        // ];
+        return [
+            'name' => [
+                'required',
+                'string', 'max:255',
+                Rule::unique('projects')->ignore($this->route('project')),
+            ],
+            'description' => 'required|string|max:255',
+            'status' => [
+                'required',
+                Rule::in(array_keys(config('params.project.status')))
+            ],
+            'user_id' => 'required|exists:users,id'
+        ];
     }
 }

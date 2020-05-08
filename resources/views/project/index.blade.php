@@ -35,8 +35,12 @@
                                 <td>{{ date('d M Y', strtotime($project->created_at)) }}</td>
                                 <td>{{ date('d M Y', strtotime($project->updated_at)) }}</td>
                                 <td style="display: inline-flex;">
-                                    <a href="{{ route('project.edit', $project->id) }} " 
+                                    <a href="{{ route('project.show', $project->id) }} " 
                                         class="btn btn-info mr-1">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('project.edit', $project->id) }} " 
+                                        class="btn btn-success mr-1">
                                         <i class="fa fa-pen"></i>
                                     </a>
                                     <form action="{{ route('project.destroy', $project->id)}}" 

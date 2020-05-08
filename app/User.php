@@ -59,6 +59,11 @@ class User extends Authenticatable
         return $this->belongsTo(Company::class, 'id', 'user_id');
     }
 
+    public function projectUsers()
+    {
+        return $this->hasMany(ProjectUser::class);
+    }
+
     public function createModel($attributes)
     {
         try
@@ -129,11 +134,11 @@ class User extends Authenticatable
             })->get();
     }
 
-    public function getUsersByCompanyId(int $id)
+    public function getUsersByCompanyId(int $company_id)
     {
-        return $this->with('roles')
-                ->whereHas('roles', function($query) {
+        return $this->whereHas('roles', function($query) {
                     $query->whereIn('name', self::getCompanyRoles());
-                });   
+                })
+                ->where(['company_id' => $company_id]);   
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjectService
 {
+    public $attributes;
     private $project;
 
     /**
@@ -21,14 +22,19 @@ class ProjectService
         $this->project = $project;
     }
 
-    public function create($attributes)
+    public function setProject(Project $project)
+    {
+        $this->project = $project;   
+    }
+
+    public function create()
     {
         DB::beginTransaction();
 
         try
         {
-            $this->saveProject($attributes);
-            // $this->saveProjectUser();
+            $this->saveProject();
+            $this->project->users()->attach($this->attributes['user_id']);
             
             DB::commit();
         }
@@ -38,21 +44,29 @@ class ProjectService
         }
     }
 
-    private function saveProject($attributes)
+    public function update()
     {
-        $this->project = new Project();
-        $this->project->fill($attributes);
+        DB::beginTransaction();
+
+        try
+        {
+            $this->saveProject();
+            $this->project->users()->sync($this->attributes['user_id']);
+            
+            DB::commit();
+        }
+        catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    private function saveProject()
+    {
+        $this->project = $this->project ?? new Project();
+        $this->project->fill($this->attributes);
         $this->project->company_id = Auth::user()->company->id;
 
         $this->project->save();
-    }
-
-    private function saveProjectUser()
-    {
-        $projectUser = new ProjectUser();
-        $projectUser->user_id = Auth::user()->id;
-        $projectUser->project_id = $this->project->id;
-
-        $projectUser->save();
     }
 }

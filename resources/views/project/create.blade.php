@@ -43,14 +43,13 @@
                         @enderror
                     </div>
                 </div>
-                <!-- <div class="col-sm-4">
+                <div class="col-sm-4">
                     <div class="form-group">
-                        <label for="permission">Status</label>
-                        <select id="status-select" multiple="multiple" class="form-control" name="status[]">
-                            <option>Select status</option>
-                        @foreach (config('params.project.status') as $id => $status)
-                            <option value="{{ $id }}" {{ old("status") == $id ? "Selected" : "" }}>
-                                {{ $status }}
+                        <label for="permission">Users</label>
+                        <select id="status-select" multiple="multiple" class="form-control" name="user_id[]">
+                        @foreach ($users as $id => $user)
+                            <option value="{{ $id }}" {{ old("user_id") == $id ? "Selected" : "" }}>
+                                {{ $user }}
                             </option>
                         @endforeach
                         </select>
@@ -58,7 +57,7 @@
                             <p class="help-block text-danger">{{ $message }} </p>
                         @enderror
                     </div>
-                </div> -->
+                </div>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>

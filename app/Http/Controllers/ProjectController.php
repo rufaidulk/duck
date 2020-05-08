@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use App\Http\Requests\ProjectRequest;
 use App\Project;
+use App\ProjectUser;
 use App\Services\ProjectService;
+use App\User;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -20,7 +23,7 @@ class ProjectController extends Controller
     public function __construct(ProjectService $projectService)
     {
         $this->middleware(['auth', 'companyAuthorization']);
-        // $this->authorizeResource(Company::class, 'company');
+        $this->authorizeResource(Company::class, 'company');
         $this->projectService = $projectService;
     }
 
@@ -31,7 +34,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::orderBy('name', 'asc')->paginate(15);
+        $projects = Project::where('company_id', Auth::user()->company_id)
+                        ->orderBy('name', 'asc')->paginate(15);
 
         return view('project.index', compact('projects'));
     }
@@ -43,7 +47,9 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('project.create');
+        $users = (new User)->getUsersByCompanyId(Auth::user()->company_id)->pluck('email', 'id');
+        
+        return view('project.create', compact('users'));
     }
 
     /**
@@ -54,10 +60,12 @@ class ProjectController extends Controller
      */
     public function store(ProjectRequest $request)
     {
-        try{       
-            $this->projectService->create($request->validated());
+        try
+        {       
+            $this->projectService->attributes = $request->validated();
+            $this->projectService->create();
         }
-        catch (Exception $e) {
+        catch (Exception $e) {throw $e;
             logger($e);
             return back()->with('error', 'Oops something went wrong!')->withInput();
         }
@@ -73,7 +81,9 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        //
+        $users = $project->getProjectUsersGroupByRole($project->id);
+        
+        return view('project.show', compact('project', 'users'));
     }
 
     /**
@@ -84,7 +94,9 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        //
+        $users = (new User)->getUsersByCompanyId(Auth::user()->company_id)->pluck('email', 'id');
+        
+        return view('project.edit', compact('project', 'users'));
     }
 
     /**
@@ -94,9 +106,20 @@ class ProjectController extends Controller
      * @param  \App\Project  $project
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Project $project)
+    public function update(ProjectRequest $request, Project $project)
     {
-        //
+        try
+        {       
+            $this->projectService->setProject($project);
+            $this->projectService->attributes = $request->validated();
+            $this->projectService->update();
+        }
+        catch (Exception $e) {
+            logger($e);
+            return back()->with('error', 'Oops something went wrong!')->withInput();
+        }
+
+        return redirect()->route('project.index')->with('success', 'Project updated successfully!');
     }
 
     /**
