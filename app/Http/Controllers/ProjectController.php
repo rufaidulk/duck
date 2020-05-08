@@ -23,7 +23,7 @@ class ProjectController extends Controller
     public function __construct(ProjectService $projectService)
     {
         $this->middleware(['auth', 'companyAuthorization']);
-        $this->authorizeResource(Company::class, 'company');
+        $this->authorizeResource(Project::class, 'project');
         $this->projectService = $projectService;
     }
 
