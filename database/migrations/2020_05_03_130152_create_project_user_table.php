@@ -17,8 +17,8 @@ class CreateProjectUserTable extends Migration
             $table->id();
             $table->bigInteger('user_id');
             $table->bigInteger('project_id');
-            $table->dateTime('created_at', 0);
-            $table->dateTime('updated_at', 0);
+            $table->dateTime('created_at', 0)->useCurrent();
+            $table->dateTime('updated_at', 0)->useCurrent();
         });
     }
 
