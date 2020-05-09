@@ -4,6 +4,18 @@
 <div class="card">
     <div class="card-header">
         <h5 class="float-left">Project: {{ ucfirst($project->name) }}</h5>
+        <div class="float-right">
+            <a href="{{ route('project.edit', $project->id) }} " class="btn btn-success mr-1">
+                <i class="fa fa-pen"></i>
+            </a>
+            <form class="float-right" action="{{ route('project.destroy', $project->id)}}" method="post">
+                {{ csrf_field() }}
+                @method('DELETE')
+                <button class="btn btn-danger" type="submit">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </form>
+        </div>
     </div>
     <div class="card-body">
         <div class="row">
