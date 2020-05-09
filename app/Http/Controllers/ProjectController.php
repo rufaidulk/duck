@@ -65,7 +65,7 @@ class ProjectController extends Controller
             $this->projectService->attributes = $request->validated();
             $this->projectService->create();
         }
-        catch (Exception $e) {throw $e;
+        catch (Exception $e) {
             logger($e);
             return back()->with('error', 'Oops something went wrong!')->withInput();
         }

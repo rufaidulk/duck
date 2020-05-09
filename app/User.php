@@ -64,6 +64,16 @@ class User extends Authenticatable
         return $this->hasMany(ProjectUser::class);
     }
 
+    public function assignedIssue()
+    {
+        return $this->hasOne(Issue::class, 'assignee_user_id');
+    }
+
+    public function authoredIssue()
+    {
+        return $this->hasOne(Issue::class, 'author_user_id');
+    }
+
     public function createModel($attributes)
     {
         try

@@ -33,6 +33,11 @@ class Project extends Model
         return $this->belongsToMany(User::class);
     }
 
+    public function issues()
+    {
+        return $this->hasMany(Issue::class);
+    }
+
     public function getProjectUsersGroupByRole($project_id)
     {
         return ProjectUser::leftJoin('users', 'project_user.user_id', '=', 'users.id')
@@ -46,6 +51,11 @@ class Project extends Model
                     ->groupBy(['role', 'users.email'])
                     ->get()
                     ->groupBy('role');
+    }
+
+    public function getProjectsByCompany($company_id)
+    {
+        return Project::where('company_id', $company_id);
     }
 
 }

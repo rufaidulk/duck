@@ -22,3 +22,10 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('/project', 'ProjectController');
 Route::resource('/user', 'UserController');
+Route::resource('/issue', 'IssueController');
+
+/**
+ * Ajax Filter routes
+ */
+Route::get('/ajax/project-assignee', 'AjaxFilterController@projectAssignee')->name('ajax.project.assignee');
+Route::get('/ajax/issue', 'AjaxFilterController@issue')->name('ajax.issue.index');

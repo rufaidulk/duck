@@ -36,7 +36,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" href="{{ route('issue.index') }}">
             <i class="fas fa-fw fa-tasks"></i>
             <span>Issues</span>
         </a>

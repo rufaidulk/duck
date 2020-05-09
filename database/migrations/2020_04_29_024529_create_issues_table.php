@@ -23,12 +23,12 @@ class CreateIssuesTable extends Migration
             $table->bigInteger('parent_issue_id')->nullable();
             $table->bigInteger('assignee_user_id')->nullable();
             $table->bigInteger('author_user_id');
-            $table->text('development_type')->nullable();
             $table->date('due_date')->nullable();
             $table->decimal('estimated_time', 8, 2)->nullable();
             $table->tinyInteger('status');
             $table->dateTime('created_at', 0);
             $table->dateTime('updated_at', 0);
+            $table->unique(['project_id', 'subject']);
         });
     }
 
