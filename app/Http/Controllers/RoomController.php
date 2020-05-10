@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoomController extends Controller
 {
@@ -23,7 +25,9 @@ class RoomController extends Controller
      */
     public function index()
     {
-        return view('room.index');
+        $rooms = (new Room)->getRoomsByUser(Auth::id());
+        
+        return view('room.index', compact('rooms'));
     }
 
     /**

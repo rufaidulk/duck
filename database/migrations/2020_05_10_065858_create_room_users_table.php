@@ -15,8 +15,8 @@ class CreateRoomUsersTable extends Migration
     {
         Schema::create('room_users', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
             $table->bigInteger('room_id');
+            $table->bigInteger('user_id');
             $table->dateTime('created_at', 0)->useCurrent();
             $table->dateTime('updated_at', 0)->useCurrent();
         });
