@@ -40,8 +40,12 @@
         </div>
         <div id="contacts">
             <ul>
+            @php 
+                $activeChat = 'active';
+            @endphp
             @foreach($rooms as $room)
-                <li class="contact">
+                <li class="contact {{ $activeChat }}" data-room="{{ $room->room_id }}" 
+                    onclick="switchRoom(this)">
                     <div class="wrap">
                         <span class="contact-status online"></span>
                         <img src="http://emilcarlsson.se/assets/louislitt.png" alt="" />
@@ -53,17 +57,10 @@
                         </div>
                     </div>
                 </li>
+            @php 
+                $activeChat = '';
+            @endphp
             @endforeach
-                <li class="contact active">
-                    <div class="wrap">
-                        <span class="contact-status busy"></span>
-                        <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                        <div class="meta">
-                            <p class="name">Harvey Specter</p>
-                            <p class="preview">Wrong. You take the gun, or you pull out a bigger one. Or, you call their bluff. Or, you do any one of a hundred and forty six other things.</p>
-                        </div>
-                    </div>
-                </li>
             </ul>
         </div>
         <div id="bottom-bar">
@@ -77,39 +74,18 @@
             <p>Harvey Specter</p>
         </div>
         <div class="messages">
-            <ul>
-                <li class="sent">
-                    <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
-                    <p>How the hell am I supposed to get a jury to believe you when I am not even sure that I do?!</p>
+            <ul id="chat-message-body">
+                <!-- <li class="sent">
+                    <p>
+                        How the hell am I supposed to get a jury to believe you when I am not even sure that I do?!
+                    </p>
                 </li>
                 <li class="replies">
-                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                    <p>When you're backed against the wall, break the god damn thing down.</p>
-                </li>
-                <li class="replies">
-                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                    <p>Excuses don't win championships.</p>
-                </li>
-                <li class="sent">
-                    <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
-                    <p>Oh yeah, did Michael Jordan tell you that?</p>
-                </li>
-                <li class="replies">
-                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                    <p>No, I told him that.</p>
-                </li>
-                <li class="replies">
-                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                    <p>What are your choices when someone puts a gun to your head?</p>
-                </li>
-                <li class="sent">
-                    <img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
-                    <p>What are you talking about? You do what they say or they shoot you.</p>
-                </li>
-                <li class="replies">
-                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                    <p>Wrong. You take the gun, or you pull out a bigger one. Or, you call their bluff. Or, you do any one of a hundred and forty six other things.</p>
-                </li>
+                    <p>
+                        <span class="reply-user">sdfsd</span>
+                        When you're backed against the wall, break the god damn thing down.
+                    </p>
+                </li> -->
             </ul>
         </div>
         <div class="message-input">
@@ -121,64 +97,69 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
+
+<input id="room-show-url" type="hidden" value="{{ url('room/') }}">
+
+    <script type="text/javascript" src="{{ asset('js/chat.js') }}"></script>
+    <script type="text/javascript">
     
-    $(".messages").animate({ scrollTop: $(document).height() }, "fast");
-
-    $("#profile-img").click(function() {
-        $("#status-options").toggleClass("active");
-    });
-
-    $(".expand-button").click(function() {
-      $("#profile").toggleClass("expanded");
-        $("#contacts").toggleClass("expanded");
-    });
-
-    $("#status-options ul li").click(function() {
-        $("#profile-img").removeClass();
-        $("#status-online").removeClass("active");
-        $("#status-away").removeClass("active");
-        $("#status-busy").removeClass("active");
-        $("#status-offline").removeClass("active");
-        $(this).addClass("active");
-        
-        if($("#status-online").hasClass("active")) {
-            $("#profile-img").addClass("online");
-        } else if ($("#status-away").hasClass("active")) {
-            $("#profile-img").addClass("away");
-        } else if ($("#status-busy").hasClass("active")) {
-            $("#profile-img").addClass("busy");
-        } else if ($("#status-offline").hasClass("active")) {
-            $("#profile-img").addClass("offline");
-        } else {
-            $("#profile-img").removeClass();
-        };
-        
-        $("#status-options").removeClass("active");
-    });
-
-    function newMessage() {
-        message = $(".message-input input").val();
-        if($.trim(message) == '') {
-            return false;
-        }
-        $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
-        $('.message-input input').val(null);
-        $('.contact.active .preview').html('<span>You: </span>' + message);
         $(".messages").animate({ scrollTop: $(document).height() }, "fast");
-    };
 
-    $('.submit').click(function() {
-      newMessage();
-    });
+        $("#profile-img").click(function() {
+            $("#status-options").toggleClass("active");
+        });
 
-    $(window).on('keydown', function(e) {
-      if (e.which == 13) {
-        newMessage();
-        return false;
-      }
-});
+        $(".expand-button").click(function() {
+          $("#profile").toggleClass("expanded");
+            $("#contacts").toggleClass("expanded");
+        });
 
-</script>
+        $("#status-options ul li").click(function() {
+            $("#profile-img").removeClass();
+            $("#status-online").removeClass("active");
+            $("#status-away").removeClass("active");
+            $("#status-busy").removeClass("active");
+            $("#status-offline").removeClass("active");
+            $(this).addClass("active");
+            
+            if($("#status-online").hasClass("active")) {
+                $("#profile-img").addClass("online");
+            } else if ($("#status-away").hasClass("active")) {
+                $("#profile-img").addClass("away");
+            } else if ($("#status-busy").hasClass("active")) {
+                $("#profile-img").addClass("busy");
+            } else if ($("#status-offline").hasClass("active")) {
+                $("#profile-img").addClass("offline");
+            } else {
+                $("#profile-img").removeClass();
+            };
+            
+            $("#status-options").removeClass("active");
+        });
+
+        function newMessage() {
+            message = $(".message-input input").val();
+            if($.trim(message) == '') {
+                return false;
+            }
+            $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+            $('.message-input input').val(null);
+            $('.contact.active .preview').html('<span>You: </span>' + message);
+            $(".messages").animate({ scrollTop: $(document).height() }, "fast");
+        };
+
+        $('.submit').click(function() {
+          newMessage();
+        });
+
+        $(window).on('keydown', function(e) {
+            if (e.which == 13) {
+                newMessage();
+                return false;
+            }
+        });
+
+    </script>
+
 </body>
 </html>

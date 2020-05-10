@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Chat;
 use App\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class RoomController extends Controller
 {
@@ -57,9 +59,20 @@ class RoomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Room $room)
     {
-        //
+        $chats = Chat::where('room_id', $room->id)
+                    ->leftJoin('users', 'users.id', '=', 'chats.sender_id')
+                    ->select(['chats.id', 'sender_id', 'users.name as sender_name', 'message'])
+                    ->orderBy('id', 'desc')
+                    ->paginate(10);
+        
+        $response['user_id'] = Auth::id();
+        $response['room_id'] = $room->id;
+        $response['room_type'] = $room->type;
+        $response['chats'] = $chats;
+
+        return $response;
     }
 
     /**

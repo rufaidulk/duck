@@ -667,3 +667,9 @@ body {
 #frame .content .message-input .wrap button:focus {
   outline: none;
 }
+.reply-user {
+    color: #df9810;
+    font-weight: bold;
+    text-transform: capitalize;
+    display: block;
+}
