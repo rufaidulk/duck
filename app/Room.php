@@ -21,7 +21,9 @@ class Room extends Model
                             ->joinSub($latestChats, 'latest_chats', function($join) {
                                 $join->on('latest_chats.room_id', '=', 'room_users.room_id');
                             })
-                            ->select(['room_users.room_id', 'users.name', 'latest_chats.message'])
+                            ->leftJoin('rooms', 'rooms.id', '=', 'room_users.room_id')
+                            ->select(['room_users.room_id', 'users.name', 'latest_chats.message', 
+                                'rooms.type'])
                             ->whereIn('room_users.room_id', $privateRoomIds)
                             ->where('room_users.user_id', '!=', $user_id)
                             ->union($publicRooms)
@@ -53,7 +55,7 @@ class Room extends Model
                     ->joinSub($latestChats, 'latest_chats', function($join) {
                         $join->on('latest_chats.room_id', '=', 'rooms.id');
                     })
-                    ->select(['rooms.id as room_id', 'name', 'latest_chats.message'])
+                    ->select(['rooms.id as room_id', 'name', 'latest_chats.message', 'rooms.type'])
                     ->where('type', self::TYPE_PUBLIC);
     }
 

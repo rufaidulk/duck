@@ -45,7 +45,7 @@
             @endphp
             @foreach($rooms as $room)
                 <li class="contact {{ $activeChat }}" data-room="{{ $room->room_id }}" 
-                    onclick="switchRoom(this)">
+                    data-room_type="{{ $room->type }}" onclick="switchRoom(this)">
                     <div class="wrap">
                         <span class="contact-status online"></span>
                         <img src="http://emilcarlsson.se/assets/louislitt.png" alt="" />
@@ -90,15 +90,18 @@
         </div>
         <div class="message-input">
             <div class="wrap">
-            <input type="text" placeholder="Write your message..." />
+            <input id="chat-message-input" type="text" placeholder="Write your message..." />
             <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
-            <button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+            <button class="submit">
+                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            </button>
             </div>
         </div>
     </div>
 </div>
 
 <input id="room-show-url" type="hidden" value="{{ url('room/') }}">
+<input id="session-user-name" type="hidden" value="{{ $username }}">
 
     <script type="text/javascript" src="{{ asset('js/chat.js') }}"></script>
     <script type="text/javascript">
@@ -137,27 +140,27 @@
             $("#status-options").removeClass("active");
         });
 
-        function newMessage() {
-            message = $(".message-input input").val();
-            if($.trim(message) == '') {
-                return false;
-            }
-            $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
-            $('.message-input input').val(null);
-            $('.contact.active .preview').html('<span>You: </span>' + message);
-            $(".messages").animate({ scrollTop: $(document).height() }, "fast");
-        };
+        // function newMessage() {
+        //     message = $(".message-input input").val();
+        //     if($.trim(message) == '') {
+        //         return false;
+        //     }
+        //     $('<li class="sent"><img src="http://emilcarlsson.se/assets/mikeross.png" alt="" /><p>' + message + '</p></li>').appendTo($('.messages ul'));
+        //     $('.message-input input').val(null);
+        //     $('.contact.active .preview').html('<span>You: </span>' + message);
+        //     $(".messages").animate({ scrollTop: $(document).height() }, "fast");
+        // };
 
-        $('.submit').click(function() {
-          newMessage();
-        });
+        // $('.submit').click(function() {
+        //   newMessage();
+        // });
 
-        $(window).on('keydown', function(e) {
-            if (e.which == 13) {
-                newMessage();
-                return false;
-            }
-        });
+        // $(window).on('keydown', function(e) {
+        //     if (e.which == 13) {
+        //         handleNewMessage();
+        //         return false;
+        //     }
+        // });
 
     </script>
 
