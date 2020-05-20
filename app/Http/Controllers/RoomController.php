@@ -29,7 +29,8 @@ class RoomController extends Controller
     {
         $rooms = (new Room)->getRoomsByUser(Auth::id());
         $username = Auth::user()->name;
-        return view('room.index', compact('rooms', 'username'));
+        $userId = Auth::id();
+        return view('room.index', compact('rooms', 'username', 'userId'));
     }
 
     /**

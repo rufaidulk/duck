@@ -102,6 +102,7 @@
 
 <input id="room-show-url" type="hidden" value="{{ url('room/') }}">
 <input id="session-user-name" type="hidden" value="{{ $username }}">
+<input id="session-user-id" type="hidden" value="{{ $userId }}">
 
     <script type="text/javascript" src="{{ asset('js/chat.js') }}"></script>
     <script type="text/javascript">

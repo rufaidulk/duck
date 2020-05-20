@@ -6,6 +6,7 @@
 const PRIVATE_ROOM = 1;
 const PUBLIC_ROOM = 2;
 const USER_NAME = $("#session-user-name").val();
+const USER_ID = $("#session-user-id").val();
 
 let currentRoomId;
 let currentRoomType;
@@ -162,6 +163,7 @@ function handleNewMessage()
        roomId : currentRoomId,
        type : currentRoomType,
        name : USER_NAME,
+       id : USER_ID,
        message : message 
     };
 
