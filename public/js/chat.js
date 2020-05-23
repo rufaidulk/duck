@@ -117,7 +117,7 @@ socket.onopen = function (event) {
 socket.onmessage = function (event) {
     console.log("New message from server");
     console.log(event.data);
-    if (event.data === "") {
+    if (event.data === "" || !isJSON(event.data)) {
         return;
     }
 
@@ -204,3 +204,79 @@ function addRecievedMessageToRoomPreview(roomId, message, name)
         }
     });
 }
+
+/**
+ * chat media file handling
+ */
+const chatFileInputSelector = document.getElementById("chat-file-input-selector");
+const chatFileInput = document.getElementById("chat-file-input");
+
+chatFileInputSelector.addEventListener("click", function (e) {
+    if (chatFileInput) {
+        chatFileInput.click();
+    }
+}, false);
+
+
+chatFileInput.addEventListener("change", handleFiles, false); 
+
+function handleFiles() 
+{
+    if (!this.files.length) {
+        console.log("no files selected");
+    } 
+    else 
+    {
+        console.log("File is selected");
+        sendFile();
+        for (let i = 0; i < this.files.length; i++) 
+        {
+            const div = document.createElement("div");
+            const img = document.createElement("img");
+            img.src = URL.createObjectURL(this.files[i]);
+            img.onload = function() {
+                URL.revokeObjectURL(this.src);
+            }
+
+            $(img).addClass("chat-box-img");
+            div.appendChild(img);
+            $(div).appendTo($('#chat-message-body'));
+            $(".messages").animate({ scrollTop: $(document).height() }, "fast");
+        }
+    }
+}
+
+function sendFile() 
+{
+    var file = document.getElementById('chat-file-input').files[0];
+    var reader = new FileReader();
+    var rawData = new ArrayBuffer();            
+
+    reader.loadend = function() {
+
+    }
+
+    reader.onload = function(e) {
+        rawData = e.target.result;
+        console.log(rawData);
+        const payload = {
+            image : rawData,
+            id : "3"
+        }
+        console.log(JSON.stringify(payload));
+        socket.send(rawData);
+        console.log("the File has been transferred.")
+    }
+
+    reader.readAsArrayBuffer(file);
+}
+
+function isJSON(str) 
+{ 
+    try { 
+        return (JSON.parse(str) && !!str); 
+    } 
+    catch (e) { 
+        return false; 
+    } 
+} 

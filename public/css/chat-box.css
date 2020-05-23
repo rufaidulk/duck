@@ -673,3 +673,11 @@ body {
     text-transform: capitalize;
     display: block;
 }
+.chat-box-img {
+    width: 150px;
+    margin-left: 14px;
+    margin-top: 10px;
+    border: 2px solid gray;
+    height: 160px;
+    border-radius: 5px;
+}
