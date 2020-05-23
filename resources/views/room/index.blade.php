@@ -31,7 +31,7 @@
         <div id="profile">
             <div class="wrap">
                 <img id="profile-img" src="http://emilcarlsson.se/assets/mikeross.png" class="online" alt="" />
-                <p>Mike Ross</p>
+                <p>{{ $username }}</p>
             </div>
         </div>
         <div id="search">
@@ -74,7 +74,7 @@
             <p>Harvey Specter</p>
         </div>
         <div class="messages">
-            <ul id="chat-message-body" style="padding-bottom: 18px;">
+            <ul id="chat-message-body" style="padding-bottom: 18px;display: block;">
                 <!-- <li class="sent">
                     <p>
                         How the hell am I supposed to get a jury to believe you when I am not even sure that I do?!
@@ -86,13 +86,10 @@
                         When you're backed against the wall, break the god damn thing down.
                     </p>
                 </li> -->
-                <!-- <div class="">
-                    <img class="chat-box-img" src="http://emilcarlsson.se/assets/louislitt.png" alt="" />
+                <!-- <div align="right">
+                    <img class="chat-box-img" src="{{ asset('storage/index.jpg') }}" alt="" />
                 </div>
-                <div class=>
-                    <img class="chat-box-img" src="http://emilcarlsson.se/assets/louislitt.png" alt="" />
-                </div>
-                <div class="img-frame">
+                <div align="left">
                     <img class="chat-box-img" src="http://emilcarlsson.se/assets/louislitt.png" alt="" />
                 </div> -->
             </ul>
@@ -113,6 +110,7 @@
 <input id="room-show-url" type="hidden" value="{{ url('room/') }}">
 <input id="session-user-name" type="hidden" value="{{ $username }}">
 <input id="session-user-id" type="hidden" value="{{ $userId }}">
+<input id="storage-path" type="hidden" value="{{ asset('storage/') . '/' }}">
 
     <script type="text/javascript" src="{{ asset('js/chat.js') }}"></script>
     <script type="text/javascript">

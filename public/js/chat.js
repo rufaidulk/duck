@@ -7,6 +7,9 @@ const PRIVATE_ROOM = 1;
 const PUBLIC_ROOM = 2;
 const USER_NAME = $("#session-user-name").val();
 const USER_ID = $("#session-user-id").val();
+const STORAGE_PATH = $("#storage-path").val();
+const MEDIA_TEXT = 1;
+const MEDIA_IMAGE = 2;
 
 let currentRoomId;
 let currentRoomType;
@@ -55,9 +58,11 @@ function fetchRoomChatSuccessHandler(response)
 
     for (let [key, chat] of Object.entries(response.chats.data)) 
     {
+
         let messageType = 'sent';
         let senderName = senderLabel = '';
-        
+        let imageAlign = 'left';
+
         if (response.room_type == PUBLIC_ROOM) {
             senderName = chat.sender_name;
         }
@@ -65,6 +70,16 @@ function fetchRoomChatSuccessHandler(response)
         if (response.user_id != chat.sender_id) {
             messageType = 'replies'; 
             senderLabel = '<span class="reply-user">' + senderName + '</span>';
+            imageAlign = 'right';
+        }
+
+
+        if (chat.media_type == MEDIA_IMAGE) 
+        {
+            chatHtmlBody += '<div align="' + imageAlign + '">' + senderLabel +
+                '<img class="chat-box-img" src="' + STORAGE_PATH + chat.message + '" alt="" />' +
+            '</div>';
+            continue;
         }
 
         chatHtmlBody += '<li class="' + messageType + '">' +

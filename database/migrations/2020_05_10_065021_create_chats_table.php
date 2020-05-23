@@ -18,6 +18,7 @@ class CreateChatsTable extends Migration
             $table->bigInteger('room_id');
             $table->bigInteger('sender_id');
             $table->text('message')->collation('utf8_general_ci');
+            $table->tinyInteger('media_type');
             $table->dateTime('created_at', 0)->useCurrent();
             $table->dateTime('updated_at', 0)->useCurrent();
         });

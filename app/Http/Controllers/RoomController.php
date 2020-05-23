@@ -30,6 +30,7 @@ class RoomController extends Controller
         $rooms = (new Room)->getRoomsByUser(Auth::id());
         $username = Auth::user()->name;
         $userId = Auth::id();
+
         return view('room.index', compact('rooms', 'username', 'userId'));
     }
 
@@ -64,7 +65,7 @@ class RoomController extends Controller
     {
         $chats = Chat::where('room_id', $room->id)
                     ->leftJoin('users', 'users.id', '=', 'chats.sender_id')
-                    ->select(['chats.id', 'sender_id', 'users.name as sender_name', 'message'])
+                    ->select(['chats.id', 'sender_id', 'users.name as sender_name', 'message', 'media_type'])
                     ->orderBy('id', 'desc')
                     ->paginate(10);
         
