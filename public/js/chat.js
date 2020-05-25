@@ -77,8 +77,8 @@ function fetchRoomChatSuccessHandler(response)
         if (chat.media_type == MEDIA_IMAGE) 
         {
             chatHtmlBody += '<div align="' + imageAlign + '">' + senderLabel +
-                '<img class="chat-box-img" src="' + STORAGE_PATH + chat.message + '" alt="" />' +
-            '</div>';
+                '<img class="chat-box-img" src="' + STORAGE_PATH + response.room_id + '/' + 
+                chat.message + '" alt="" />' + '</div>';
             continue;
         }
 
@@ -137,12 +137,12 @@ socket.onmessage = function (event) {
     }
 
     res = JSON.parse(event.data);
-    
-    if (currentRoomId == res.roomId) {
-        addRecievedMessageToCurrentChatRoom(res.message, res.type, res.name);
+    console.log(res);
+    if (currentRoomId == res.room_id) {
+        addRecievedMessageToCurrentChatRoom(res.message, res.room_type, res.sender_name, res.media_type);
     }
     else {
-        addRecievedMessageToRoomPreview(res.roomId, res.message, res.name);
+        addRecievedMessageToRoomPreview(res.room_id, res.message, res.sender_name, res.media_type);
     }
 }
 
@@ -175,10 +175,11 @@ function handleNewMessage()
     }
 
     const payload = {
-       roomId : currentRoomId,
-       type : currentRoomType,
-       name : USER_NAME,
-       id : USER_ID,
+       room_id : currentRoomId,
+       room_type : currentRoomType,
+       sender_name : USER_NAME,
+       sender_id : USER_ID,
+       media_type : MEDIA_TEXT,
        message : message 
     };
 
@@ -194,16 +195,26 @@ function addSentMessageToCurrentChatRoom(message)
     $(".messages").animate({ scrollTop: $(document).height() }, "fast");
 }
 
-function addRecievedMessageToCurrentChatRoom(message, type, name)
+function addRecievedMessageToCurrentChatRoom(message, type, name, mediaType)
 {
+    let html = '';
     senderLabel = '';
     if (type == PUBLIC_ROOM) {
         senderLabel = '<span class="reply-user">' + name + '</span>';    
     }
     
-    let html = '<li class="replies">' +
+    if (mediaType == MEDIA_IMAGE)
+    {
+        html += '<div align="right">' + senderLabel +
+                '<img class="chat-box-img" src="' + STORAGE_PATH + currentRoomId + '/' + 
+                message + '" alt="" />' + '</div>';
+    }
+    else 
+    {
+        html = '<li class="replies">' +
             '<p>' + senderLabel + message + '</p>' +
             '</li>';
+    }
 
     $(html).appendTo($('.messages ul'));
     $('.message-input input').val(null);
@@ -211,8 +222,12 @@ function addRecievedMessageToCurrentChatRoom(message, type, name)
     $(".messages").animate({ scrollTop: $(document).height() }, "fast");
 }
 
-function addRecievedMessageToRoomPreview(roomId, message, name)
+function addRecievedMessageToRoomPreview(roomId, message, name, mediaType)
 {
+    if (mediaType == MEDIA_IMAGE) {
+        message = "New image";
+    }
+
     $("#contacts ul li").each(function(i, inputObj) {
         if ($(inputObj).data().room == roomId) {
             $(inputObj).find(".preview").html('<span>' + name + ': </span>' + message);
@@ -243,7 +258,7 @@ function handleFiles()
     else 
     {
         console.log("File is selected");
-        sendFile();
+        sendFileViaAjax();
         for (let i = 0; i < this.files.length; i++) 
         {
             const div = document.createElement("div");
@@ -261,9 +276,48 @@ function handleFiles()
     }
 }
 
-function sendFile() 
+function sendFileViaAjax()
+{
+    let file = document.getElementById('chat-file-input').files[0];
+    let form = $("#upload_form");
+    const formData = new FormData();
+    formData.append('room_id', currentRoomId);
+    formData.append('chat_file', file);
+    formData.append('_token', $("input[name='_token']").val());
+    
+    $.ajax({
+        url: form.attr('action'),
+        method: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: ajaxFileUploadSuccessHandler
+    });
+}
+
+function ajaxFileUploadSuccessHandler(response)
+{
+    if (response.status == "error") {
+        alert(response.message);
+        return;
+    }
+
+    const payload = {
+       room_id : currentRoomId,
+       room_type : currentRoomType,
+       sender_name : USER_NAME,
+       sender_id : USER_ID,
+       media_type : MEDIA_IMAGE,
+       message : response.file_name
+    };
+
+    socket.send(JSON.stringify(payload));
+}
+
+function sendFileAsBinary() 
 {
     var file = document.getElementById('chat-file-input').files[0];
+
     var reader = new FileReader();
     var rawData = new ArrayBuffer();            
 
@@ -273,12 +327,6 @@ function sendFile()
 
     reader.onload = function(e) {
         rawData = e.target.result;
-        console.log(rawData);
-        const payload = {
-            image : rawData,
-            id : "3"
-        }
-        console.log(JSON.stringify(payload));
         socket.send(rawData);
         console.log("the File has been transferred.")
     }

@@ -97,8 +97,11 @@
         <div class="message-input">
             <div class="wrap">
             <input id="chat-message-input" type="text" placeholder="Write your message..." />
-            <input type="file" id="chat-file-input" style="display:none">
-            <i id="chat-file-input-selector" class="fa fa-paperclip attachment" aria-hidden="true"></i>
+            <form method="post" id="upload_form" action="{{ route('room.store') }}" enctype="multipart/form-data">
+                <input type="hidden" id="csrf-token" value="{{ csrf_token() }}">
+                <input type="file" id="chat-file-input" name="chat_file" style="display:none">
+                <i id="chat-file-input-selector" class="fa fa-paperclip attachment" aria-hidden="true"></i>
+            </form>
             <button class="submit">
                 <i class="fa fa-paper-plane" aria-hidden="true"></i>
             </button>
@@ -110,7 +113,7 @@
 <input id="room-show-url" type="hidden" value="{{ url('room/') }}">
 <input id="session-user-name" type="hidden" value="{{ $username }}">
 <input id="session-user-id" type="hidden" value="{{ $userId }}">
-<input id="storage-path" type="hidden" value="{{ asset('storage/') . '/' }}">
+<input id="storage-path" type="hidden" value="{{ asset('chats/') . '/' }}">
 
     <script type="text/javascript" src="{{ asset('js/chat.js') }}"></script>
     <script type="text/javascript">

@@ -7,6 +7,8 @@ use App\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class RoomController extends Controller
 {
@@ -52,7 +54,25 @@ class RoomController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+          'chat_file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+        
+        $file = $request->file('chat_file');
+        $fileName = Str::orderedUuid()->toString() . '.' . $file->getClientOriginalExtension();
+        $file->storeAs('chats/' . $request->room_id, $fileName);
+
+        return response()->json([
+            'status' => 'success',
+            'file_name' => $fileName
+        ]);
     }
 
     /**
